@@ -1,7 +1,7 @@
 <?php
 namespace WS\Tests;
 /**
- * @property string $seleniumOptions
+ * @property string $selenium
  *
  * @author <sokolovsky@worksolutions.ru>
  */

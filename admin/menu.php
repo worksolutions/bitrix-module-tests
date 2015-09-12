@@ -4,6 +4,7 @@ global $USER;
 if (!$USER->isAdmin()) {
     return array();
 }
+CModule::IncludeModule('ws.tests');
 $loc = \WS\Tests\Module::getInstance()->getLocalization('menu');
 $inputUri = '/bitrix/admin/ws_tests.php?q=';
 return array(

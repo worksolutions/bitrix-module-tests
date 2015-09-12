@@ -1,12 +1,9 @@
 <?
 use Bitrix\Main\Application;
 
-require_once __DIR__.'/../lib/Module.php';
-require_once __DIR__.'/../lib/localization.php';
-require_once __DIR__.'/../lib/options.php';
-require_once __DIR__.'/../lib/moduleoptions.php';
+include __DIR__."/../include.php";
 
-Class ws_tests extends CModule {
+class ws_tests extends CModule {
     const MODULE_ID = 'ws.tests';
     var $MODULE_ID = 'ws.tests';
     var $MODULE_VERSION;
@@ -25,10 +22,10 @@ Class ws_tests extends CModule {
         $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
 
         $localization = \WS\Tests\Module::getInstance()->getLocalization('info');
-        $this->MODULE_NAME = $localization->getDataByPath("name");
-        $this->MODULE_DESCRIPTION = $localization->getDataByPath("description");
+        $this->MODULE_NAME = $localization->message("name");
+        $this->MODULE_DESCRIPTION = $localization->message("description");
         $this->PARTNER_NAME = GetMessage('PARTNER_NAME');
-        $this->PARTNER_NAME = $localization->getDataByPath("partner.name");
+        $this->PARTNER_NAME = $localization->message("partner.name");
         $this->PARTNER_URI = 'http://worksolutions.ru';
     }
 
@@ -70,26 +67,18 @@ Class ws_tests extends CModule {
 
     function DoInstall() {
         global $APPLICATION, $data;
-        $loc = \WS\Tests\Module::getInstance()->getLocalization('setup');
+        $loc = \WS\Tests\Module::getInstance()->getLocalization('install');
         $options = \WS\Tests\Module::getInstance()->getOptions();
         global $errors;
         $errors = array();
-        if ($data['options']) {
-            $dir = $_SERVER['DOCUMENT_ROOT'].$data['catalog'];
-            if (!is_dir($dir)) {
-                mkdir($dir);
-            }
-            if (!is_dir($dir)) {
-                $errors[] = $loc->getDataByPath('error.notCreateDir');
-            }
-            if (!$errors) {
-                $options->catalogPath = $data['catalog'];
-            }
+        if ($data['selenium']) {
+            $options->selenium = array(
+                'url' => $data['selenium']['url']
+            );
             $this->InstallFiles();
             $this->InstallDB();
             RegisterModule(self::MODULE_ID);
             \Bitrix\Main\Loader::includeModule(self::MODULE_ID);
-            \Bitrix\Main\Loader::includeModule('iblock');
         }
         if (!$data || $errors) {
             $APPLICATION->IncludeAdminFile($loc->message('title'), __DIR__.'/form.php');

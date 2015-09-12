@@ -57,7 +57,7 @@ class Module {
         if (!isset($this->localizations[$path])) {
             $realPath = $this->localizePath.'/'.str_replace('.', '/',$path).'.php';
             if (!  file_exists($realPath)) {
-                throw new \Exception('localization by path not found');
+                throw new \Exception('localization by path `'.$realPath.'` not found');
             }
             $this->localizations[$path] = new Localization(include $realPath);
         }
