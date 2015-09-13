@@ -90,16 +90,9 @@ class ws_tests extends CModule {
         global $APPLICATION, $data;
         global $errors;
         $errors = array();
-        $loc = \WS\Tests\Module::getInstance()->getLocalization('uninstall');
 
-        if (!$data || $errors) {
-            $APPLICATION->IncludeAdminFile($loc->message('title'), __DIR__.'/uninstall.php');
-            return;
-        }
-        if ($data['removeAll'] == "Y") {
-            $this->UnInstallDB();
-            $this->removeOptions();
-        }
+        $this->UnInstallDB();
+        $this->removeOptions();
         $this->UnInstallFiles();
         UnRegisterModule(self::MODULE_ID);
     }
