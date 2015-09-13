@@ -2,6 +2,9 @@
 
 namespace WS\Tests;
 
+use Bitrix\Main\Event;
+use WS\Tests\Run\Runner;
+
 /**
  * Class Module (Singleton)
  *
@@ -14,12 +17,18 @@ class Module {
 
     private static $name = 'ws.tests';
 
+    /**
+     * @var Runner
+     */
+    private $runner;
+
     private function __construct() {
         $this->localizePath = __DIR__.'/../lang/'.LANGUAGE_ID;
 
         if (!file_exists($this->localizePath)) {
             $this->localizePath = __DIR__.'/../lang/ru';
         }
+        $this->runner = new Runner();
     }
 
     static public function getName($stripDots = false) {
@@ -62,6 +71,23 @@ class Module {
             $this->localizations[$path] = new Localization(include $realPath);
         }
         return $this->localizations[$path];
+    }
+
+    /**
+     * @return Runner
+     */
+    public function getRunner() {
+        return $this->runner;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAutotestClasses() {
+        $register = new Register();
+        $event = new Event(self::$name, 'registration', array($register));
+        $event->send();
+        return $register->getClasses();
     }
 }
 
