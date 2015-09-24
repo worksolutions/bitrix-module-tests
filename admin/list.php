@@ -57,7 +57,9 @@ foreach ($tmpFilter as $key => $val) {
 foreach ($module->getTests() as $id => $test) {
     $row = $lAdmin->AddRow($id, $test);
 
-    $row->AddActions(array(
+    $row->AddViewField('labels', implode('<br/>', $test['labels'] ?: array()));
+
+    $actions = array(
         array(
             'TEXT' => $localization->message('actions.run'),
             'ACTION' => ''
@@ -69,12 +71,14 @@ foreach ($module->getTests() as $id => $test) {
         array(
             'TEXT' => $localization->message('actions.report'),
             'ACTION' => ''
-        ),
-        array(
-            'TEXT' => $localization->message('actions.edit'),
-            'ACTION' => ''
         )
-    ));
+    );
+
+    $test['type'] == 'manual' && $actions[] = array(
+        'TEXT' => $localization->message('actions.edit'),
+        'LINK' => 'ws_tests.php?q=edit&id='.$id
+    );
+    $row->AddActions($actions);
 }
 $lAdmin->AddGroupActionTable(array(
     'run' => $localization->message('actions.run'),

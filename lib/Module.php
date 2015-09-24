@@ -5,6 +5,7 @@ namespace WS\Tests;
 use Bitrix\Main\Event;
 use WS\Tests\Run\AutoTest;
 use WS\Tests\Run\Runner;
+use WS\Tests\Tables\TestConfigurationTable;
 
 /**
  * Class Module (Singleton)
@@ -96,6 +97,15 @@ class Module {
      */
     public function getTests() {
         $res = array();
+
+        foreach (TestConfigurationTable::getList()->fetchAll() as $manualConfig) {
+            $res[$manualConfig['ID']] = array(
+                'name' => '[M] '.$manualConfig['NAME'],
+                'labels' => explode(',', $manualConfig['LABELS']),
+                'type' => 'manual'
+            );
+        }
+
         foreach ($this->getAutotestClasses() as $class) {
             if (!class_exists($class) || !is_subclass_of($class, AutoTest::className())) {
                 continue;
@@ -110,7 +120,8 @@ class Module {
                 /** @var AutoTest $suite */
                 $suite = new $class;
                 $res[$class.'::'.$test->getName()] = array(
-                    'name' => $suite->getTestName($test->getName())
+                    'name' => $suite->getTestName($test->getName()),
+                    'type' => 'auto'
                 );
             }
         }
