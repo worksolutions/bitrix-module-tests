@@ -121,7 +121,8 @@ class Module {
                 $suite = new $class;
                 $res[$class.'::'.$test->getName()] = array(
                     'name' => $suite->getTestName($test->getName()),
-                    'type' => 'auto'
+                    'type' => 'auto',
+                    'labels' => $suite->getLabels()
                 );
             }
         }

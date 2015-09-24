@@ -48,13 +48,37 @@ $contextMenu = array(
     )
 );
 $lAdmin->AddAdminContextMenu($contextMenu);
-foreach ($tmpFilter as $key => $val) {
-    $key == 'find_type';
-    $key == 'find_labels';
+$module->getTests();
+$tests = array();
+
+$tmpFilter['find_name'] = strtolower($tmpFilter['find_name']);
+$tmpFilter['find_labels'] = strtolower($tmpFilter['find_labels']);
+
+foreach ($module->getTests() as $id => $test) {
+    if ($tmpFilter['find_type'] && $test['type'] != $tmpFilter['find_type']) {
+        continue;
+    }
+
+    if ($tmpFilter['find_labels']) {
+        $hasLabel = false;
+        $testLabels = $test['labels'] ?: array();
+        foreach ($testLabels as $label) {
+            if (strpos($label, $tmpFilter['find_labels']) !== false) {
+                $hasLabel = true;
+                break;
+            }
+        }
+        if (!$hasLabel) {
+            continue;
+        }
+    }
+    if ($tmpFilter['find_name'] && strpos(strtolower($test['name']), $tmpFilter['find_name']) === false) {
+        continue;
+    }
+    $tests[$id] = $test;
 }
 
-/** @var \Domain\Entities\Client $client */
-foreach ($module->getTests() as $id => $test) {
+foreach ($tests as $id => $test) {
     $row = $lAdmin->AddRow($id, $test);
 
     $row->AddViewField('labels', implode('<br/>', $test['labels'] ?: array()));
@@ -84,6 +108,7 @@ $lAdmin->AddGroupActionTable(array(
     'run' => $localization->message('actions.run'),
     'download' => $localization->message('actions.download'),
 ));
+
 $lAdmin->CheckListMode();
 
 if ($_REQUEST["mode"] == "list") {
@@ -125,7 +150,7 @@ $oFilter = new CAdminFilter(
         </tr>
 
         <?php
-        $oFilter->Buttons(array("table_id"=>$sTableID, "url"=>$APPLICATION->GetCurPage(). '?p=clients&lang=' . LANGUAGE_ID , "form"=>"find_form"));
+        $oFilter->Buttons(array("table_id"=>$sTableID, "url"=>$APPLICATION->GetCurPage(). '?q=list&lang=' . LANGUAGE_ID , "form"=>"find_form"));
         $oFilter->End();
         ?>
     </form>
