@@ -39,7 +39,14 @@ $arHeaders = array(
 );
 
 $lAdmin->AddHeaders($arHeaders);
-$contextMenu = array();
+$contextMenu = array(
+    array(
+        "ICON" => "btn_new",
+        "TEXT" => $localization->message('actions.add'),
+        "TITLE" => $localization->message('actions.add'),
+        "LINK" => "javascript:void(0)"
+    )
+);
 $lAdmin->AddAdminContextMenu($contextMenu);
 foreach ($tmpFilter as $key => $val) {
     $key == 'find_type';
@@ -49,8 +56,30 @@ foreach ($tmpFilter as $key => $val) {
 /** @var \Domain\Entities\Client $client */
 foreach ($module->getTests() as $id => $test) {
     $row = $lAdmin->AddRow($id, $test);
-}
 
+    $row->AddActions(array(
+        array(
+            'TEXT' => $localization->message('actions.run'),
+            'ACTION' => ''
+        ),
+        array(
+            'TEXT' => $localization->message('actions.history'),
+            'ACTION' => ''
+        ),
+        array(
+            'TEXT' => $localization->message('actions.report'),
+            'ACTION' => ''
+        ),
+        array(
+            'TEXT' => $localization->message('actions.edit'),
+            'ACTION' => ''
+        )
+    ));
+}
+$lAdmin->AddGroupActionTable(array(
+    'run' => $localization->message('actions.run'),
+    'download' => $localization->message('actions.download'),
+));
 $lAdmin->CheckListMode();
 
 if ($_REQUEST["mode"] == "list") {

@@ -11,6 +11,10 @@ class Test {
         return get_called_class();
     }
 
+    public function getLabels() {
+        return array();
+    }
+
     public function run() {
     }
 }
