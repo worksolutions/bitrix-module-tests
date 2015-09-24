@@ -86,15 +86,15 @@ foreach ($tests as $id => $test) {
     $actions = array(
         array(
             'TEXT' => $localization->message('actions.run'),
-            'ACTION' => ''
+            'ACTION' => $lAdmin->ActionDoGroup($id, 'run')
         ),
         array(
             'TEXT' => $localization->message('actions.history'),
-            'ACTION' => ''
+            'ACTION' => $lAdmin->ActionDoGroup($id, 'history')
         ),
         array(
             'TEXT' => $localization->message('actions.report'),
-            'ACTION' => ''
+            'ACTION' => $lAdmin->ActionDoGroup($id, 'report')
         )
     );
 
@@ -133,19 +133,29 @@ $oFilter = new CAdminFilter(
         <tr>
             <td><?php echo $localization->message('columns.name')?>:</td>
             <td>
-                <input type="text" name="find_name"/>
+                <input type="text" name="find_name" value="<?=$tmpFilter['find_name']?>"/>
             </td>
         </tr>
         <tr>
             <td><?php echo $localization->message('columns.type')?>:</td>
             <td>
-                <input type="text" name="find_type"/>
+                <?php
+                $arrTypes = array(
+                    'reference' => array(
+                        $localization->message('messages.type.all'),
+                        $localization->message('messages.type.auto'),
+                        $localization->message('messages.type.manual')
+                    ),
+                    'reference_id' => array('', 'auto', 'manual')
+                );
+                echo SelectBoxFromArray('find_type', $arrTypes);
+                ?>
             </td>
         </tr>
         <tr>
             <td><?php echo $localization->message('columns.labels')?>:</td>
             <td>
-                <input type="text" name="find_labels"/>
+                <input type="text" name="find_labels" value="<?=$tmpFilter['find_labels']?>"/>
             </td>
         </tr>
 
