@@ -3,6 +3,7 @@
 namespace WS\Tests;
 
 use Bitrix\Main\Event;
+use WS\Tests\Run\AutoTest;
 use WS\Tests\Run\Runner;
 
 /**
@@ -88,6 +89,32 @@ class Module {
         $event = new Event(self::$name, 'registration', array($register));
         $event->send();
         return $register->getClasses();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTests() {
+        $res = array();
+        foreach ($this->getAutotestClasses() as $class) {
+            if (!class_exists($class) || !is_subclass_of($class, AutoTest::className())) {
+                continue;
+            }
+            $refClass = new \ReflectionClass($class);
+            $tests = array_filter($refClass->getMethods(), function (\ReflectionMethod $method) {
+                return strpos($method->getName(), 'test') === 0;
+            });
+
+            /** @var \ReflectionMethod $test */
+            foreach ($tests as $test) {
+                /** @var AutoTest $suite */
+                $suite = new $class;
+                $res[$class.'::'.$test->getName()] = array(
+                    'name' => $suite->getTestName($test->getName())
+                );
+            }
+        }
+        return $res;
     }
 }
 

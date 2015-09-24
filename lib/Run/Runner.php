@@ -49,4 +49,9 @@ class Runner {
      */
     public function getTest($reportId) {
     }
+
+    public function getTests() {
+        $res = array();
+        
+    }
 }

@@ -26,4 +26,3 @@ if (file_exists($actionFile)) {
     $APPLICATION->ThrowException("Action `$actionFile` not exists");
 }
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/epilog_admin_after.php");
-?>

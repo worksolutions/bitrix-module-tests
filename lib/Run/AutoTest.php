@@ -22,6 +22,6 @@ abstract class AutoTest extends Test {
     }
 
     public function getTestName($methodName) {
-        return $this->getName().'. '.self::generateSentence($methodName, 'test');
+        return '[А]'.$this->getName().'. '.self::generateSentence($methodName, 'test');
     }
 }
