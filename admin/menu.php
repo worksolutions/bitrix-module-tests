@@ -20,6 +20,7 @@ return array(
             array(
                 'text' => $loc->message('list'),
                 'url' => $inputUri.'list',
+                'more_url' => array($inputUri.'edit')
             ),
             array(
                 'text' => $loc->message('reports'),

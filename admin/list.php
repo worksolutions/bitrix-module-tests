@@ -44,7 +44,7 @@ $contextMenu = array(
         "ICON" => "btn_new",
         "TEXT" => $localization->message('actions.add'),
         "TITLE" => $localization->message('actions.add'),
-        "LINK" => "javascript:void(0)"
+        "LINK" => "ws_tests.php?q=edit"
     )
 );
 $lAdmin->AddAdminContextMenu($contextMenu);
